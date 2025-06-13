@@ -39,18 +39,18 @@ const Navbar = ({ role = 'client' }: { role?: 'client' | 'admin' | 'superadmin' 
         submenu: [
           { name: 'Direct Tax', href: '/direct-tax' },
           { name: 'InDirect Tax', href: '/indirect-tax' },
-          { name: 'WCA', href: '/wca' },
+          { name: 'NCA', href: '/nca' },
           { name: 'RERA', href: '/rera' },
           { name: 'FEMA', href: '/fema' },
         ],
       },
       {
         name: 'Wealth',
-        href: '/trust',
+        href: '/invest',
         submenu: [
-          { name: 'Trust', href: '/trust' },
+          { name: 'Invest', href: '/invest' },
           { name: 'Real Estate', href: '/real-estate' },
-          { name: 'WRI', href: '/wri' },
+          { name: 'NRI', href: '/nri' },
         ],
       },
       { name: 'Insurance', href: '/insurance' },
@@ -98,7 +98,7 @@ const Navbar = ({ role = 'client' }: { role?: 'client' | 'admin' | 'superadmin' 
   };
 
   return (
-    <nav className="flex items-center justify-between p-4 bg-white shadow-md">
+    <nav className="flex items-center justify-between p-4 bg-white shadow-md z-50">
       {/* Logo */}
       <div className="flex items-center">
         <Link href="/">
@@ -107,7 +107,7 @@ const Navbar = ({ role = 'client' }: { role?: 'client' | 'admin' | 'superadmin' 
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex space-x-6">
+      <div className="hidden md:flex space-x-6 z-50">
         {getMenuItems().map((item) => (
           <div key={item.name} className="relative group">
             <Link href={item.href} className="hover:text-blue-600">
