@@ -65,7 +65,6 @@ const Navbar = ({ role = 'client' }: { role?: 'client' | 'admin' | 'superadmin' 
         href: '/create-post',
         submenu: [
           { name: 'Create New Post', href: '/create-post' },
-          { name: 'Edit Post', href: '/edit-post' },
           { name: 'View All Posts', href: '/view-posts' },
         ],
       },

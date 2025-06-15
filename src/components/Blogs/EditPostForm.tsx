@@ -131,8 +131,8 @@ export default function EditPostForm({ post }: { post: TPost }) {
   };
 
   return (
-    <div>
-      <h2>Create Post</h2>
+   <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Edit Post</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           onChange={(e) => setTitle(e.target.value)}
@@ -148,7 +148,7 @@ export default function EditPostForm({ post }: { post: TPost }) {
 
         {links &&
           links.map((link, i) => (
-            <div key={i} className="flex items-center gap-4">
+            <div key={i} className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-sm">
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -165,7 +165,7 @@ export default function EditPostForm({ post }: { post: TPost }) {
                   />
                 </svg>
               </span>
-              <Link className="link" href={link}>
+              <Link className="link text-blue-600 underline break-all" href={link}>
                 {link}
               </Link>
               <span className="cursor-pointer" onClick={() => deleteLink(i)}>
@@ -267,7 +267,7 @@ export default function EditPostForm({ post }: { post: TPost }) {
             ))}
         </select>
 
-        <button className="primary-btn" type="submit">
+        <button    className="bg-green-600 text-white py-3 rounded-md text-base font-semibold hover:bg-green-700 transition-all duration-200" type="submit">
           Update Post
         </button>
       </form>

@@ -103,7 +103,7 @@ export default function CreatePostForm() {
 
       if (res.ok) {
         toast.success("Post created successfully");
-        // router.push("/dashboard");
+        router.push("/dashboard");
         router.refresh();
       } else {
         toast.error("Something went wrong.");
@@ -114,17 +114,20 @@ export default function CreatePostForm() {
   };
 
   return (
-    <div>
-      <h2>Create Post</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Create Post</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           onChange={(e) => setTitle(e.target.value)}
           type="text"
           placeholder="Title"
+          value={title}
+          className="p-3 border rounded-md text-sm sm:text-base"
         />
         <textarea
           onChange={(e) => setContent(e.target.value)}
           placeholder="Content"
+           className="p-3 border rounded-md text-sm sm:text-base"
         ></textarea>
 
         {links &&
@@ -146,7 +149,7 @@ export default function CreatePostForm() {
                   />
                 </svg>
               </span>
-              <Link className="link" href={link}>
+              <Link className=" link text-blue-600 underline break-all" href={link}>
                 {link}
               </Link>
               <span className="cursor-pointer" onClick={() => deleteLink(i)}>
@@ -170,7 +173,7 @@ export default function CreatePostForm() {
 
         <div className="flex gap-2">
           <input
-            className="flex-1"
+            className="flex-1 p-3 border rounded-md text-sm"
             type="text"
             onChange={(e) => setLinkInput(e.target.value)}
             value={linkInput}
@@ -247,7 +250,7 @@ export default function CreatePostForm() {
             ))}
         </select>
 
-        <button className="primary-btn" type="submit">
+        <button  className="bg-green-600 text-white py-3 rounded-md text-base font-semibold hover:bg-green-700 transition-all duration-200" type="submit">
           Create Post
         </button>
       </form>
