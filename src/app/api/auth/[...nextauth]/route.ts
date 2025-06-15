@@ -17,6 +17,15 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  callbacks: {
+    async session({ session, user }) {
+      // Ensure custom role is added
+      if (session.user) {
+        session.user.role = user.role as "USER" | "ADMIN" | "SUPERADMIN";
+      }
+      return session;
+    },
+  },
   pages: {
     signIn: "/sign-in",
   },

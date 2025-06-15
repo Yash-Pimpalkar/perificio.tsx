@@ -1,31 +1,37 @@
-"use client"
-import React, { useEffect } from 'react'
-import Link from 'next/link';
-import { useState } from 'react';
-import { useSession,signOut } from 'next-auth/react';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+
+type RoleType = "client" | "admin" | "superadmin";
+
 type MenuItem = {
   name: string;
   href: string;
   submenu?: MenuItem[];
 };
 
-type MenuConfig = {
-  client: MenuItem[];
-  admin: MenuItem[];
-  superadmin: MenuItem[];
-};
+type MenuConfig = Record<RoleType, MenuItem[]>;
 
-const Navbar = ({ role = 'client' }: { role?: 'client' | 'admin' | 'superadmin' }) => {
-  const { data: session, status } = useSession();
-  const [resolvedRole, setResolvedRole] = useState<'client' | 'admin' | 'superadmin'>(role);
+interface SessionUser {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  role?: "USER" | "ADMIN" | "SUPERADMIN";
+}
+
+const Navbar = () => {
+  const { data: session ,status} = useSession();
+  const [resolvedRole, setResolvedRole] = useState<RoleType>("client");
 
   useEffect(() => {
-    if (session?.user) {
-      setResolvedRole('admin');
-    } else {
-      setResolvedRole(role);
-    }
-  }, [session, role]);
+    const user = session?.user as SessionUser;
+     console.log(user)
+    if (user?.role === "ADMIN") setResolvedRole("admin");
+    else if (user?.role === "SUPERADMIN") setResolvedRole("superadmin");
+    else setResolvedRole("client");
+  }, [session]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
