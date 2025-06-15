@@ -58,13 +58,14 @@ const Navbar = ({ role = 'client' }: { role?: 'client' | 'admin' | 'superadmin' 
       { name: 'Contact Us', href: '/contact' },
     ],
     admin: [
+        { name: 'Home', href: '/' },
       { name: 'Dashboard', href: '/dashboard' },
       {
         name: 'Posts',
         href: '/create-post',
         submenu: [
           { name: 'Create New Post', href: '/create-post' },
-          { name: 'Edit Posts', href: '/edit-posts' },
+          { name: 'Edit Post', href: '/edit-post' },
           { name: 'View All Posts', href: '/view-posts' },
         ],
       },

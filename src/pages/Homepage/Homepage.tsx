@@ -1,13 +1,43 @@
-'use client'
-import Chatbot from '@/components/ChatBot/ChatBot';
-import React, { useEffect, useState } from 'react'
 
+import { TPost } from '@/app/types';
+import React  from 'react'
+import ViewBlogs from '@/components/Blogs/ViewBlogs';
 
+interface MarketDataItem {
+  name: string;
+  price: number;
+}
+
+type MarketScrollerType = 'price' | 'custom';
+
+interface MarketScrollerProps {
+  data: MarketDataItem[];
+  animationSpeed: number; // In seconds
+  type: MarketScrollerType;
+}
+const getPosts = async (): Promise<TPost[] | null> => {
+  try {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/posts`, {
+      cache: "no-store",
+    });
+
+    if (res.ok) {
+      const posts = await res.json();
+      return posts;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return null;
+};
 
 
 const Homepage = () => {
+
+
     // State for chatbot visibility
-  const [showChatbot, setShowChatbot] = useState(false);
+
 
   const testimonials = [
     {
@@ -123,9 +153,7 @@ const Homepage = () => {
     { name: 'JPY/INR', rate: 0.537, change: 0.001, percentChange: 0.19, status: 'positive' },
   ];
 
-  const [capitalMarketData, setCapitalMarketData] = useState(initialCapitalData);
-  const [mutualFundData, setMutualFundData] = useState(initialMutualFundData);
-  const [currencyExchangeData, setCurrencyExchangeData] = useState(initialCurrencyData);
+
 const bannerImages = [
   { src: '/assets/gst-banner.png', url: '/services/gst' },
   { src: '/assets/itr-banner.png', url: '/services/itr' },
@@ -133,166 +161,13 @@ const bannerImages = [
 ];
 
 
-  // ** API KEYS ARE NOW SET **
-  const ALPHA_VANTAGE_API_KEY = 'W5P8D6BWTJSP0K59';
-  const EXCHANGE_RATE_API_KEY = '652799a528644db32390372f'; // Assuming this is for ExchangeRate-API or similar
 
-  useEffect(() => {
-    const fetchCapitalMarketData = async () => {
-      try {
-        const symbols = ['IBM', 'AAPL', 'MSFT', 'GOOGL', 'AMZN']; // Examples of global stocks
-        const fetchedStocks = [];
-
-        for (const symbol of symbols) {
-          const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`);
-          const data = await response.json();
-
-          if (data['Global Quote'] && data['Global Quote']['01. symbol']) {
-            const quote = data['Global Quote'];
-            const name = quote['01. symbol'];
-            const current = parseFloat(quote['05. price']);
-            const change = parseFloat(quote['09. change']);
-            const percentChange = parseFloat(quote['10. change percent'].replace('%', ''));
-
-            fetchedStocks.push({
-              name: name,
-              current: current,
-              change: change,
-              percentChange: percentChange,
-              status: change >= 0 ? 'positive' : 'negative'
-            });
-          } else {
-            console.warn(`Alpha Vantage: Could not fetch data for ${symbol}. Data:`, data);
-          }
-        }
-        // Only update if fetched data is not empty, otherwise keep existing (dummy) data
-        if (fetchedStocks.length > 0) {
-          setCapitalMarketData(fetchedStocks);
-        } else {
-          console.warn("Alpha Vantage: No capital market data fetched, retaining dummy data.");
-          setCapitalMarketData(initialCapitalData); // Revert to initial dummy if fetch fails
-        }
-
-      } catch (error) {
-        console.error('Error fetching capital market data:', error);
-        setCapitalMarketData(initialCapitalData); // Fallback to dummy data on network error
-      }
-    };
-
-    const fetchMutualFundData = async () => {
-      // Mutual fund data fetching logic (currently using dummy data)
-      // This function can be expanded later if a suitable API is found.
-      setMutualFundData(initialMutualFundData); // Always use dummy data for now
-    };
-
-    const fetchLiveCurrencyExchangeData = async () => {
-      try {
-        const currencyPairs = [
-          { from: 'USD', to: 'INR' },
-          { from: 'EUR', to: 'INR' },
-          { from: 'GBP', to: 'INR' },
-          { from: 'JPY', to: 'INR' }
-        ];
-
-        const fetchedCurrencies = [];
-        for (const pair of currencyPairs) {
-          // Using ExchangeRate-API for direct currency conversion
-          const response = await fetch(`https://v6.exchangerate-api.com/v6/${EXCHANGE_RATE_API_KEY}/pair/${pair.from}/${pair.to}`);
-          const data = await response.json();
-
-          if (data.result === 'success' && data.conversion_rate) {
-            const rate = parseFloat(data.conversion_rate); // Ensure rate is a number
-
-            // Simulating a small random change for dynamic appearance
-            const simulatedChange = (Math.random() * 0.1 * (Math.random() > 0.5 ? 1 : -1));
-            const simulatedPercentChange = (simulatedChange / rate) * 100;
-            const status = simulatedChange >= 0 ? 'positive' : 'negative';
-
-            fetchedCurrencies.push({
-              name: `${pair.from}/${pair.to}`,
-              rate: rate,
-              change: simulatedChange,
-              percentChange: simulatedPercentChange,
-              status: status
-            });
-          } else {
-            console.warn(`ExchangeRate-API: Could not fetch currency for ${pair.from}/${pair.to}. Data:`, data);
-          }
-        }
-
-        // Only update if fetched data is not empty, otherwise keep existing (dummy) data
-        if (fetchedCurrencies.length > 0) {
-          setCurrencyExchangeData(fetchedCurrencies);
-        } else {
-          console.warn("ExchangeRate-API: No currency exchange data fetched, retaining dummy data.");
-          setCurrencyExchangeData(initialCurrencyData); // Revert to initial dummy if fetch fails
-        }
-
-      } catch (error) {
-        console.error('Error fetching live currency exchange data:', error);
-        setCurrencyExchangeData(initialCurrencyData); // Fallback to dummy data on network error
-      }
-    };
-
-    // Initial fetch
-    fetchCapitalMarketData();
-    fetchMutualFundData();
-    fetchLiveCurrencyExchangeData();
-
-    // Set up interval for continuous refresh
-    // Be mindful of API rate limits!
-    const interval = setInterval(() => {
-      fetchCapitalMarketData();
-      fetchMutualFundData();
-      fetchLiveCurrencyExchangeData();
-    }, 60000); // Refresh every 60 seconds (1 minute)
-
-    return () => clearInterval(interval); // Clean up on unmount
-  }, [ALPHA_VANTAGE_API_KEY, EXCHANGE_RATE_API_KEY]);
-
-interface MarketDataItem {
-  name: string;
-  price: number;
-}
-
-type MarketScrollerType = 'price' | 'custom';
-
-interface MarketScrollerProps {
-  data: MarketDataItem[];
-  animationSpeed: number; // In seconds
-  type: MarketScrollerType;
-}
-
-const MarketScroller: React.FC<MarketScrollerProps> = ({ data, animationSpeed, type }) => {
-  const duplicatedData = [...data, ...data];
-
-  if (duplicatedData.length === 0) {
-    return (
-      <div className="w-full text-center py-4 text-gray-500">
-        No market data available.
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="whitespace-nowrap overflow-hidden"
-      style={{
-        animation: `scroll-left ${animationSpeed}s linear infinite`,
-      }}
-    >
-      {duplicatedData.map((item, index) => (
-        <span key={index} className="inline-block px-4">
-          {type === 'price' ? `${item.name}: ₹${item.price.toFixed(2)}` : item.name}
-        </span>
-      ))}
-    </div>
-  );
-};
 
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-inter relative"> {/* Added relative for chatbot positioning */}
+    <div className="min-h-screen bg-white text-gray-900 font-inter relative">
+
+       {/* Added relative for chatbot positioning */}
       {/* Dynamic Services Advertising Banner with Rolling Cards  */}
      <section className="w-full min-h-screen flex flex-col items-center justify-center px-4 md:px-6 lg:px-20 py-12 md:py-16 bg-gradient-to-br from-[#E0F2FE] to-[#BFDBFE] text-[#1D4ED8] text-center">
 
@@ -363,7 +238,11 @@ const MarketScroller: React.FC<MarketScrollerProps> = ({ data, animationSpeed, t
       </section>
 
       {/* Market Watch Section */}
-    
+    <section className="py-12 md:py-20 bg-white">
+        <div className="container mx-auto px-4">
+         <ViewBlogs />
+      </div>
+      </section>
 
       {/* Blog/Knowledge Base Section */}
       <section className="py-12 md:py-20 bg-[#F8FAFC]"> {/* Very light gray background */}
@@ -455,24 +334,11 @@ const MarketScroller: React.FC<MarketScrollerProps> = ({ data, animationSpeed, t
       </section>
 
       {/* Floating Help Button */}
-      <button
-        onClick={() => setShowChatbot(!showChatbot)}
-        className="fixed bottom-6 right-6 bg-[#B91C1C] text-white p-4 rounded-full shadow-lg hover:bg-[#DC2626] transition-all duration-300 z-50 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#B91C1C] focus:ring-offset-2 flex items-center justify-center space-x-2 text-lg font-semibold px-6 py-3" // Adjusted styling for a wider button with text
-        aria-label={showChatbot ? "Close Help" : "Open Help"}
-      >
-        {/* Help icon (simple question mark or speech bubble) */}
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-        </svg>
-        <span>Help</span>
-      </button>
+    
 
-      {/* Chatbot Modal/Panel */}
-      {showChatbot && (
-        <div className="fixed bottom-24 right-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-[450px] sm:h-[500px] md:h-[550px] bg-white rounded-lg shadow-2xl z-40 transition-transform transform origin-bottom-right duration-300 ease-out animate-slide-up">
-          <Chatbot services={services} />
-        </div>
-      )}
+      
+      
+    
 
       <style>
         {`

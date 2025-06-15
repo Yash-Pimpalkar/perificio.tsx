@@ -1,14 +1,14 @@
 "use client";
 
-import { TCategory } from "@/app/types";
+import { TCategory, TPost } from "@/app/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CldUploadButton, CloudinaryUploadWidgetResults  } from "next-cloudinary";
+import { CldUploadButton, CloudinaryUploadWidgetResults} from "next-cloudinary";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
-export default function CreatePostForm() {
+export default function EditPostForm({ post }: { post: TPost }) {
   const [links, setLinks] = useState<string[]>([]);
   const [linkInput, setLinkInput] = useState("");
   const [title, setTitle] = useState("");
@@ -22,13 +22,44 @@ export default function CreatePostForm() {
 
   useEffect(() => {
     const fetchAllCategories = async () => {
-      const res = await fetch("api/categories");
+      const res = await fetch("/api/categories");
       const catNames = await res.json();
       setCategories(catNames);
     };
 
     fetchAllCategories();
-  }, []);
+
+    const initValues = () => {
+      setTitle(post.title);
+      setContent(post.content);
+      setImageUrl(post.imageUrl || "");
+      setPublicId(post.publicId || "");
+      setSelectedCategory(post.catName || "");
+      setLinks(post.links || []);
+    };
+
+    initValues();
+  }, [
+    post.title,
+    post.content,
+    post.imageUrl,
+    post.publicId,
+    post.catName,
+    post.links,
+  ]);
+
+  const addLink = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    if (linkInput.trim() !== "") {
+      setLinks((prev) => [...prev, linkInput]);
+      setLinkInput("");
+    }
+  };
+
+  const deleteLink = (index: number) => {
+    setLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
 
   const handleImageUpload = (result: CloudinaryUploadWidgetResults) => {
     console.log("result: ", result);
@@ -44,23 +75,12 @@ export default function CreatePostForm() {
     }
   };
 
-  const addLink = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    if (linkInput.trim() !== "") {
-      setLinks((prev) => [...prev, linkInput]);
-      setLinkInput("");
-    }
-  };
-
-  const deleteLink = (index: number) => {
-    setLinks((prev) => prev.filter((_, i) => i !== index));
-  };
 
   const removeImage = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("api/removeImage", {
+      const res = await fetch("/api/removeImage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ publicId }),
@@ -79,15 +99,13 @@ export default function CreatePostForm() {
     e.preventDefault();
 
     if (!title || !content) {
-      const errorMessage = "Title and content are required";
-      toast.error(errorMessage);
+      toast.error("Title and content are required");
       return;
     }
 
     try {
-      console.log(imageUrl)
-      const res = await fetch("api/posts/", {
-        method: "POST",
+      const res = await fetch(`/api/posts/${post.id}`, {
+        method: "PUT",
         headers: {
           "Content-type": "application/json",
         },
@@ -102,13 +120,12 @@ export default function CreatePostForm() {
       });
 
       if (res.ok) {
-        toast.success("Post created successfully");
-        // router.push("/dashboard");
+        toast.success("Post edited successfully");
+        router.push("/dashboard");
         router.refresh();
-      } else {
-        toast.error("Something went wrong.");
       }
     } catch (error) {
+      toast.error("Something went wrong");
       console.log(error);
     }
   };
@@ -121,10 +138,12 @@ export default function CreatePostForm() {
           onChange={(e) => setTitle(e.target.value)}
           type="text"
           placeholder="Title"
+          value={title}
         />
         <textarea
           onChange={(e) => setContent(e.target.value)}
           placeholder="Content"
+          value={content}
         ></textarea>
 
         {links &&
@@ -191,7 +210,7 @@ export default function CreatePostForm() {
           </button>
         </div>
 
-        <CldUploadButton
+   <CldUploadButton
           uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
           className={`h-48 border-2 mt-4 border-dotted grid place-items-center bg-slate-100 rounded-md relative ${
             imageUrl && "pointer-events-none"
@@ -237,6 +256,7 @@ export default function CreatePostForm() {
         <select
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="p-3 rounded-md border appearance-none"
+          value={selectedCategory}
         >
           <option value="">Select A Category</option>
           {categories &&
@@ -248,7 +268,7 @@ export default function CreatePostForm() {
         </select>
 
         <button className="primary-btn" type="submit">
-          Create Post
+          Update Post
         </button>
       </form>
     </div>

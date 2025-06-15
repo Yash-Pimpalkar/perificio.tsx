@@ -21,11 +21,11 @@ export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-//   const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-//   if (!session) {
-//     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-//   }
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
   const { title, content, links, selectedCategory, imageUrl, publicId } =
     await req.json();
   const id = params.id;
@@ -54,11 +54,11 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-//   const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-//   if (!session) {
-//     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-//   }
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
 
   const id = params.id;
   try {

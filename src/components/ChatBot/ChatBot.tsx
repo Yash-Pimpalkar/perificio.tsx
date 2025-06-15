@@ -19,6 +19,7 @@ interface ChatbotProps {
 }
 
 const Chatbot = ({ services = [] }: ChatbotProps) => {
+    const [showChatbot, setShowChatbot] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -108,6 +109,20 @@ const Chatbot = ({ services = [] }: ChatbotProps) => {
   };
 
   return (
+    <>
+      <button
+            onClick={() => setShowChatbot(!showChatbot)}
+            className="fixed bottom-6 right-6 bg-[#B91C1C] text-white p-4 rounded-full shadow-lg hover:bg-[#DC2626] transition-all duration-300 z-50 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#B91C1C] focus:ring-offset-2 flex items-center justify-center space-x-2 text-lg font-semibold px-6 py-3" // Adjusted styling for a wider button with text
+            aria-label={showChatbot ? "Close Help" : "Open Help"}
+          >
+            {/* Help icon (simple question mark or speech bubble) */}
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+            <span>Help</span>
+          </button>
+            <div className="fixed bottom-24 right-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-[450px] sm:h-[500px] md:h-[550px] bg-white rounded-lg shadow-2xl z-40 transition-transform transform origin-bottom-right duration-300 ease-out animate-slide-up">
+          {showChatbot && (
     <div className="flex flex-col h-full bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
       <div className="bg-[#1D4ED8] text-white p-4 text-center font-bold text-lg rounded-t-lg">
         Perficio Chatbot
@@ -158,6 +173,10 @@ const Chatbot = ({ services = [] }: ChatbotProps) => {
         </button>
       </div>
     </div>
+    
+          )}
+          </div>
+    </>
   );
 };
 
