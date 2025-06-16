@@ -1,15 +1,44 @@
 @import "tailwindcss";
-@font-face {
-  font-family: 'Geist Sans';
-  src: url('/fonts/Geist-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-}
 
 
 :root {
   --background: #ffffff;
   --foreground: #ffffff;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+  --font-geist-sans: 'Geist Sans', sans-serif;
+  
+  /* Blue theme shades */
+  --blue-50: #f0f9ff;
+  --blue-100: #e0f2fe;
+  --blue-200: #bae6fd;
+  --blue-300: #7dd3fc;
+  --blue-400: #38bdf8;
+  --blue-500: #0ea5e9;
+  --blue-600: #0284c7;
+  --blue-700: #0369a1;
+  --blue-800: #075985;
+  --blue-900: #0c4a6e;
+  
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* Responsive font sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
 }
 
 @theme inline {
@@ -19,7 +48,85 @@
   --font-mono: var(--font-geist-mono);
 }
 
-body {
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+*, *::before, *::after {
+  box-sizing: border-box;
 }
+
+body {
+  background: linear-gradient(135deg, var(--blue-50) 0%, var(--blue-100) 100%);
+  font-family: var(--font-roboto);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  margin: 0 auto;
+  padding: 0 ; 
+  min-height: 100vh;
+}
+
+
+.wrapper {
+  @apply px-4 sm:px-6 lg:px-13;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-montserrat);
+  margin: 0 0 var(--space-md) 0;
+  line-height: 1.2;
+}
+
+h1 { font-size: var(--text-4xl); font-weight: 700; }
+h2 { font-size: var(--text-3xl); font-weight: 600; }
+h3 { font-size: var(--text-2xl); font-weight: 600; }
+h4 { font-size: var(--text-xl); font-weight: 500; }
+h5 { font-size: var(--text-lg); font-weight: 500; }
+h6 { font-size: var(--text-base); font-weight: 500; }
+
+p {
+  margin: 0 0 var(--space-md) 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    --text-xs: 0.7rem;
+    --text-sm: 0.8rem;
+    --text-base: 0.9rem;
+    --text-lg: 1rem;
+    --text-xl: 1.1rem;
+    --text-2xl: 1.25rem;
+    --text-3xl: 1.5rem;
+    --text-4xl: 1.75rem;
+    --text-5xl: 2.25rem;
+    --text-6xl: 2.75rem;
+    
+    --space-xs: 0.2rem;
+    --space-sm: 0.4rem;
+    --space-md: 0.8rem;
+    --space-lg: 1.2rem;
+    --space-xl: 1.5rem;
+    --space-2xl: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --text-xs: 0.65rem;
+    --text-sm: 0.75rem;
+    --text-base: 0.85rem;
+    --text-lg: 0.95rem;
+    --text-xl: 1.05rem;
+    --text-2xl: 1.15rem;
+    --text-3xl: 1.3rem;
+    --text-4xl: 1.5rem;
+    --text-5xl: 1.75rem;
+    --text-6xl: 2rem;
+    
+    --space-xs: 0.15rem;
+    --space-sm: 0.3rem;
+    --space-md: 0.6rem;
+    --space-lg: 0.9rem;
+    --space-xl: 1.2rem;
+    --space-2xl: 1.5rem;
+  }
+}
+
+
