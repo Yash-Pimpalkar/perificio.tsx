@@ -169,11 +169,11 @@ const bannerImages = [
 
        {/* Added relative for chatbot positioning */}
       {/* Dynamic Services Advertising Banner with Rolling Cards  */}
-     <section className="w-full min-h-screen flex flex-col items-center justify-center px-4 md:px-6 lg:px-20 py-12 md:py-16 bg-gradient-to-br from-[#E0F2FE] to-[#BFDBFE] text-[#1D4ED8] text-center">
+<section className="w-full min-h-screen flex flex-col items-center justify-center pt-1 pb-1 bg-gradient-to-br from-[#E0F2FE] to-[#BFDBFE] text-[#1D4ED8] text-center">
 
-  <div className="w-full overflow-hidden relative group py-4 md:py-8">
+  <div className="w-full overflow-hidden relative group">
     <div
-      className="flex gap-4 md:gap-8 min-w-max px-2 sm:px-4 md:px-8 animate-scroll-ads group-hover:[animation-play-state:paused]"
+      className="flex gap-4 md:gap-8 min-w-max  animate-scroll-ads group-hover:[animation-play-state:paused]"
       style={{ animation: 'scroll-ads 60s linear infinite' }}
     >
       {[...bannerImages, ...bannerImages].map((banner, index) => (

@@ -42,7 +42,7 @@ export default async function Post({
   const formattedDate = dateObject.toLocaleDateString("en-US", options);
 
   return (
-    <div className="my-4 border-b border-b-300 py-8">
+    <div className="my-4  py-8">
       <div className="mb-4">
         {author ? (
           <>
@@ -103,7 +103,7 @@ export default async function Post({
                 />
               </svg>
 
-              <Link className="link" href={link}>
+              <Link className="link text-blue-500" href={link}>
                 {link}
               </Link>
             </div>
