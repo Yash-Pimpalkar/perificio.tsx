@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import DeleteButton from "./DeleteButton";
@@ -29,94 +28,80 @@ export default async function Post({
   category,
 }: PostProps) {
   const session = await getServerSession(authOptions);
+  const isEditable = session?.user?.email === authorEmail;
 
-  const isEditable = session && session?.user?.email === authorEmail;
-
-  const dateObject = new Date(date);
-  const options: Intl.DateTimeFormatOptions = {
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  };
-
-  const formattedDate = dateObject.toLocaleDateString("en-US", options);
+  });
 
   return (
-    <div className="my-4  py-8">
-      <div className="mb-4">
-        {author ? (
-          <>
-            Posted by: <span className="font-bold">{author}</span> on{" "}
-            {formattedDate}
-          </>
-        ) : (
-          <>Posted on {formattedDate}</>
-        )}
+ <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] w-full max-w-sm flex flex-col h-[450px]">
+
+
+      {/* Thumbnail */}
+      <div className="relative w-full h-48">
+        <Image
+          src={thumbnail || "/thumbnail-placeholder.png"}
+          alt={title}
+          fill
+          className="object-cover rounded-t-xl"
+        />
+        <div className="absolute top-3 right-3 bg-white/70 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-semibold text-gray-800 border border-gray-200">
+          PERFICIO
+        </div>
       </div>
 
-      <div className="w-full h-72 relative">
-        {thumbnail ? (
-          <Image
-            src={thumbnail}
-            alt={title}
-            fill
-            className="object-cover rounded-md object-center"
-          />
-        ) : (
-          <Image
-            src={"/thumbnail-placeholder.png"}
-            alt={title}
-            fill
-            className="object-cover rounded-md object-center"
-          />
-        )}
-      </div>
+      {/* Content */}
+      <div className="p-4 sm:p-6 text-left flex-1 overflow-hidden">
+  <h3 className="text-lg sm:text-xl font-montserrat font-bold text-[#1D4ED8] mb-1 line-clamp-2">
+    {title}
+  </h3>
 
-      {category && (
+  <p className="text-xs sm:text-sm text-gray-600 mb-2">
+    {formattedDate} - <span className="font-semibold">{category || "General"}</span>
+  </p>
+
+  <div className="text-gray-700 text-sm leading-relaxed line-clamp-4">
+    {content}
+  </div>
+
+  {links && links.length > 0 && (
+    <div className="mt-3 space-y-2 overflow-auto max-h-24 pr-1">
+      {links.map((link, i) => (
+        <div key={i} className="flex items-center gap-2">
+          <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+          </svg>
+          <Link href={link} className="text-sm text-blue-600 hover:underline break-all">
+            {link}
+          </Link>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+      {/* Footer: Edit/Delete/Read More */}
+     
+<div className="px-4 pb-5 pt-0 text-right flex justify-between items-center  mt-auto">
+
         <Link
-          className="bg-slate-800 w-fit text-white px-4 py-0.5 text-sm font-bold rounded-md mt-4 block"
-          href={`categories/${category}`}
+          href={`/posts/${id}`}
+          className="text-[#1D4ED8] hover:text-[#3B82F6] hover:underline font-semibold text-sm"
         >
-          {category}
+          Read More →
         </Link>
-      )}
 
-      <h2>{title}</h2>
-      <p className="content">{content}</p>
-
-      {links && (
-        <div className="my-4 flex flex-col gap-3">
-          {links.map((link, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
-                />
-              </svg>
-
-              <Link className="link text-blue-500" href={link}>
-                {link}
+        {isEditable && (
+            <div className="flex items-center gap-3 text-sm font-semibold">
+              <Link href={`/edit-post/${id}`} className="text-yellow-600 hover:underline">
+                Edit
               </Link>
+              <DeleteButton id={id} />
             </div>
-          ))}
-        </div>
-      )}
-
-      {isEditable && (
-        <div className="flex gap-3 font-bold py-2 px-4 rounded-md bg-slate-200 w-fit">
-          <Link href={`/edit-post/${id}`}>Edit</Link>
-          <DeleteButton id={id} />
-        </div>
-      )}
+          )}
+      </div>
     </div>
   );
 }

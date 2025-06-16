@@ -1,6 +1,6 @@
 
 import { TPost } from '@/app/types';
-import React  from 'react'
+import React from 'react'
 import ViewBlogs from '@/components/Blogs/ViewBlogs';
 
 interface MarketDataItem {
@@ -36,7 +36,7 @@ const getPosts = async (): Promise<TPost[] | null> => {
 const Homepage = () => {
 
 
-    // State for chatbot visibility
+  // State for chatbot visibility
 
 
   const testimonials = [
@@ -154,11 +154,11 @@ const Homepage = () => {
   ];
 
 
-const bannerImages = [
-  { src: '/assets/gst-banner.png', url: '/services/gst' },
-  { src: '/assets/itr-banner.png', url: '/services/itr' },
-  { src: '/assets/rera-banner.png', url: '/services/rera' },
-];
+  const bannerImages = [
+    { src: '/assets/gst-banner.png', url: '/services/gst' },
+    { src: '/assets/itr-banner.png', url: '/services/itr' },
+    { src: '/assets/rera-banner.png', url: '/services/rera' },
+  ];
 
 
 
@@ -167,41 +167,41 @@ const bannerImages = [
   return (
     <div className="min-h-screen bg-white text-gray-900 font-inter relative">
 
-       {/* Added relative for chatbot positioning */}
+      {/* Added relative for chatbot positioning */}
       {/* Dynamic Services Advertising Banner with Rolling Cards  */}
-<section className="w-full min-h-screen flex flex-col items-center justify-center pt-1 pb-1 bg-gradient-to-br from-[#E0F2FE] to-[#BFDBFE] text-[#1D4ED8] text-center">
+      <section className="w-full min-h-screen flex flex-col items-center justify-center pt-1 pb-1 bg-gradient-to-br from-[#E0F2FE] to-[#BFDBFE] text-[#1D4ED8] text-center">
 
-  <div className="w-full overflow-hidden relative group">
-    <div
-      className="flex gap-4 md:gap-8 min-w-max  animate-scroll-ads group-hover:[animation-play-state:paused]"
-      style={{ animation: 'scroll-ads 60s linear infinite' }}
-    >
-      {[...bannerImages, ...bannerImages].map((banner, index) => (
-       <a
-  key={index}
-  href={banner.url}
-  className="w-full max-w-[90vw] sm:max-w-[80vw] lg:max-w-[75vw] aspect-[16/9] flex-shrink-0 overflow-hidden rounded-xl"
-  target="_self"
->
-  <img
-    src={banner.src}
-    alt={`Banner ${index + 1}`}
-    className="w-full h-full object-cover shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-    loading="lazy"
-  />
-</a>
+        <div className="w-full overflow-hidden relative group">
+          <div
+            className="flex gap-4 md:gap-8 min-w-max  animate-scroll-ads group-hover:[animation-play-state:paused]"
+            style={{ animation: 'scroll-ads 60s linear infinite' }}
+          >
+            {[...bannerImages, ...bannerImages].map((banner, index) => (
+              <a
+                key={index}
+                href={banner.url}
+                className="max-w-[90vw] sm:max-w-[80vw] lg:max-w-[75vw] aspect-[16/9] flex-shrink-0 overflow-hidden rounded-xl"
+                target="_self"
+              >
+                <img
+                  src={banner.src}
+                  alt={`Banner ${index + 1}`}
+                  className="w-full h-full object-cover shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                  loading="lazy"
+                />
+              </a>
 
-      ))}
-    </div>
-  </div>
+            ))}
+          </div>
+        </div>
 
-  <a
-    href="#contact"
-    className="mt-8 md:mt-12 inline-block bg-[#B91C1C] hover:bg-[#DC2626] text-white font-montserrat font-semibold px-6 py-3 md:px-10 md:py-5 rounded-lg shadow-xl transition transform hover:scale-105 text-base md:text-lg"
-  >
-    Explore All Services & Get Started
-  </a>
-</section>
+        <a
+          href="#contact"
+          className="mt-8 md:mt-12 inline-block bg-[#B91C1C] hover:bg-[#DC2626] text-white font-montserrat font-semibold px-6 py-3 md:px-10 md:py-5 rounded-lg shadow-xl transition transform hover:scale-105 text-base md:text-lg"
+        >
+          Explore All Services & Get Started
+        </a>
+      </section>
 
 
       {/* Testimonials Section */}
@@ -238,44 +238,14 @@ const bannerImages = [
       </section>
 
       {/* Market Watch Section */}
-    <section className="py-12 md:py-20 bg-white">
+      <section className="py-8 md:py-8 bg-[#F8FAFC]">
         <div className="container mx-auto px-4">
-         <ViewBlogs />
-      </div>
+          <ViewBlogs />
+        </div>
       </section>
 
       {/* Blog/Knowledge Base Section */}
-      <section className="py-12 md:py-20 bg-[#F8FAFC]"> {/* Very light gray background */}
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-montserrat font-extrabold text-[#1D4ED8] mb-8 md:mb-12">
-            Knowledge Base
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12 justify-items-center">
-            {blogPosts.map((post, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-sm overflow-hidden">
-                <div className="relative">
-                  <img src={post.image} alt={post.title} className="w-full h-40 sm:h-48 object-cover" />
-                  {/* Perficio Name/Logo overlay */}
-                  <div className="absolute top-3 right-3 bg-white/70 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-semibold text-gray-800 border border-gray-200">
-                    PERFICIO
-                  </div>
-                </div>
-                <div className="p-4 sm:p-6 text-left">
-                  <h3 className="text-lg sm:text-xl font-montserrat font-bold text-[#1D4ED8] mb-1 line-clamp-2">{post.title}</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 mb-2">{post.date} - <span className="font-semibold">{post.category}</span></p>
-                  <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">{post.excerpt}</p>
-                </div>
-                <div className="p-4 pt-0 text-right">
-                  <a href="#" className="text-[#1D4ED8] hover:text-[#3B82F6] hover:underline font-semibold text-sm">Read More &rarr;</a>
-                </div>
-              </div>
-            ))}
-          </div>
-          <a href="#" className="inline-block bg-[#1D4ED8] hover:bg-[#3B82F6] text-white font-montserrat font-semibold px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 text-base">
-            View All Blogs
-          </a>
-        </div>
-      </section>
+
 
       {/* Contact Section */}
       <section id="contact" className="py-12 md:py-20 bg-[#F0F8FF]"> {/* Alice Blue background */}
@@ -325,20 +295,18 @@ const bannerImages = [
                 </label>
               </div>
 
-              <button type="submit" className="w-full bg-[#B91C1C] hover:bg-[#DC2626] text-white font-montserrat font-semibold py-2 sm:py-3 rounded-md shadow transition text-base">
-                Continue
-              </button>
+
             </form>
           </div>
         </div>
       </section>
 
       {/* Floating Help Button */}
-    
 
-      
-      
-    
+
+
+
+
 
       <style>
         {`
@@ -412,6 +380,7 @@ const bannerImages = [
       </style>
     </div>
 
-  );}
+  );
+}
 
 export default Homepage
