@@ -8,6 +8,7 @@ const nextConfig = {
       "res.cloudinary.com",
     ],
   },
+
 };
 
 module.exports = nextConfig;

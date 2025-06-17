@@ -2,6 +2,8 @@
 import { TPost } from '@/app/types';
 import React from 'react'
 import ViewBlogs from '@/components/Blogs/ViewBlogs';
+import AnimatedSection from '@/components/AnimatedComponent/AnimatedSection';
+import MovingImages from '@/components/HeroContainer/MovingImages';
 
 interface MarketDataItem {
   name: string;
@@ -169,41 +171,14 @@ const Homepage = () => {
 
       {/* Added relative for chatbot positioning */}
       {/* Dynamic Services Advertising Banner with Rolling Cards  */}
-      <section className="w-full min-h-screen flex flex-col items-center justify-center pt-1 pb-1 bg-gradient-to-br from-[#E0F2FE] to-[#BFDBFE] text-[#1D4ED8] text-center">
-
-        <div className="w-full overflow-hidden relative group">
-          <div
-            className="flex gap-4 md:gap-8 min-w-max  animate-scroll-ads group-hover:[animation-play-state:paused]"
-            style={{ animation: 'scroll-ads 60s linear infinite' }}
-          >
-            {[...bannerImages, ...bannerImages].map((banner, index) => (
-              <a
-                key={index}
-                href={banner.url}
-                className="max-w-[90vw] sm:max-w-[80vw] lg:max-w-[75vw] aspect-[16/9] flex-shrink-0 overflow-hidden rounded-xl"
-                target="_self"
-              >
-                <img
-                  src={banner.src}
-                  alt={`Banner ${index + 1}`}
-                  className="w-full h-full object-cover shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                  loading="lazy"
-                />
-              </a>
-
-            ))}
-          </div>
-        </div>
-
-        <a
-          href="#contact"
-          className="mt-8 md:mt-12 inline-block bg-[#B91C1C] hover:bg-[#DC2626] text-white font-montserrat font-semibold px-6 py-3 md:px-10 md:py-5 rounded-lg shadow-xl transition transform hover:scale-105 text-base md:text-lg"
-        >
-          Explore All Services & Get Started
-        </a>
-      </section>
+  
+  <section className="">
+    <MovingImages />
+  </section>
 
 
+
+<AnimatedSection>
       {/* Testimonials Section */}
       <section className="py-12 md:py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -236,14 +211,15 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-
+      </AnimatedSection>
+      <AnimatedSection>
       {/* Market Watch Section */}
       <section className="py-8 md:py-8 bg-[#F8FAFC]">
         <div className="container mx-auto px-4">
           <ViewBlogs />
         </div>
       </section>
-
+      </AnimatedSection>
       {/* Blog/Knowledge Base Section */}
 
 
@@ -303,81 +279,6 @@ const Homepage = () => {
 
       {/* Floating Help Button */}
 
-
-
-
-
-
-      <style>
-        {`
-          /* Import Google Fonts */
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@700;800;900&display=swap');
-
-          /* Define custom font families */
-          .font-inter {
-            font-family: 'Inter', sans-serif;
-          }
-          .font-montserrat {
-            font-family: 'Montserrat', sans-serif;
-          }
-
-          /* Keyframes for continuous scrolling */
-          @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          @keyframes scroll-ads {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          /* This animation is used for all market data scrollers */
-          @keyframes scroll-market-data {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-
-          /* Chatbot slide-up animation */
-          @keyframes slide-up {
-            from {
-              opacity: 0;
-              transform: translateY(20px) scale(0.95);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-            }
-          }
-
-          .animate-slide-up {
-            animation: slide-up 0.3s ease-out forwards;
-          }
-
-          /* Hide scrollbar */
-          .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-          .hide-scrollbar {
-
-
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-
-          /* Line clamping utilities */
-          .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-          .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-        `}
-      </style>
     </div>
 
   );
