@@ -71,7 +71,6 @@ const Navbar = () => {
         href: '/create-post',
         submenu: [
           { name: 'Create New Post', href: '/create-post' },
-          { name: 'View All Posts', href: '/view-posts' },
         ],
       },
       {
@@ -79,11 +78,10 @@ const Navbar = () => {
         href: '/create-file',
         submenu: [
           { name: 'Upload Pdf', href: '/upload-pdf' },
-          { name: 'Delete Pdf', href: '/delete-posts' },
           { name: 'View All Pdf', href: '/view-Pdf' },
         ],
       },
-      { name: 'Users', href: '/users' },
+          { name: 'Contact', href: '/show-contact' },
     ],
     superadmin: [
       { name: 'Home', href: '/' },

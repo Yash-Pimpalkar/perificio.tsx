@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 
 interface ContactFormData {
   name: string;
@@ -19,29 +20,79 @@ const ContactUsPage: React.FC = () => {
     message: '',
   });
 
+  const [errors, setErrors] = useState<Partial<ContactFormData>>({});
+  const [popup, setPopup] = useState<{
+    show: boolean;
+    success: boolean;
+    message: string;
+  }>({ show: false, success: true, message: '' });
+
+  const validate = (): boolean => {
+    const newErrors: Partial<ContactFormData> = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!emailRegex.test(formData.email)) newErrors.email = 'Invalid email format';
+    if (formData.phone && !/^\d{10}$/.test(formData.phone)) newErrors.phone = 'Phone must be 10 digits';
+    if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: '' }); // Clear error on change
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
 
-    alert('Thank you for your message! We will get back to you shortly.');
+    if (!validate()) return;
 
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: '',
-    });
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) throw new Error(result.error || 'Something went wrong');
+
+      setPopup({ show: true, success: true, message: 'Message sent successfully!' });
+
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+      });
+    } catch (error: any) {
+      setPopup({ show: true, success: false, message: error.message });
+    }
+
+    setTimeout(() => setPopup((prev) => ({ ...prev, show: false })), 3000);
   };
-
   return (
     <div className="min-h-screen bg-gray-50 font-inter text-gray-900 overflow-hidden">
       <main className="w-full max-w-7xl mx-auto py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 lg:space-y-20">
 
+
+{popup.show && (
+        <div className="fixed top-5 right-5 z-50 bg-white border rounded-lg shadow-lg p-4 flex items-center gap-3 animate-bounce-in">
+          {popup.success ? (
+            <AiOutlineCheckCircle className="text-green-500 text-2xl" />
+          ) : (
+            <AiOutlineCloseCircle className="text-red-500 text-2xl" />
+          )}
+          <span className="text-sm text-gray-800 font-medium">{popup.message}</span>
+        </div>
+      )}
         {/* Hero Section */}
         <section
           className="relative w-full py-20 px-6 rounded-xl overflow-hidden shadow-xl"
@@ -131,6 +182,7 @@ const ContactUsPage: React.FC = () => {
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
                   required
                 />
+                {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
               </div>
               <div>
                 <label htmlFor="email" className="block text-gray-700 text-sm font-poppins mb-2">Your Email</label>
@@ -143,6 +195,7 @@ const ContactUsPage: React.FC = () => {
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
                   required
                 />
+                 {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
               <div>
                 <label htmlFor="phone" className="block text-gray-700 text-sm font-poppins mb-2">Phone Number (Optional)</label>
@@ -154,6 +207,7 @@ const ContactUsPage: React.FC = () => {
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
                 />
+                   {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
               </div>
               <div>
                 <label htmlFor="subject" className="block text-gray-700 text-sm font-poppins mb-2">Subject</label>
@@ -166,6 +220,7 @@ const ContactUsPage: React.FC = () => {
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
                   required
                 />
+                   {errors.subject && <p className="text-red-600 text-sm mt-1">{errors.subject}</p>}
               </div>
               <div>
                 <label htmlFor="message" className="block text-gray-700 text-sm font-poppins mb-2">Your Message</label>
@@ -178,6 +233,7 @@ const ContactUsPage: React.FC = () => {
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
                   required
                 />
+                    {errors.message && <p className="text-red-600 text-sm mt-1">{errors.message}</p>}
               </div>
               <button
                 type="submit"
@@ -208,18 +264,6 @@ const ContactUsPage: React.FC = () => {
           </div>
         </section>
       </main>
-
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap');
-
-        .font-inter {
-          font-family: 'Inter', sans-serif;
-        }
-
-        .font-poppins {
-          font-family: 'Poppins', sans-serif;
-        }
-      `}</style>
     </div>
   );
 };

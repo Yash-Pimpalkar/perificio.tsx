@@ -4,8 +4,8 @@
 :root {
   --background: #ffffff;
   --foreground: #ffffff;
-  --font-montserrat: 'Montserrat', sans-serif;
-  --font-roboto: 'Roboto', sans-serif;
+  --font-montserrat: 'Montserrat', 'sego ui';
+  --font-roboto: 'Roboto', 'segoe ui';
   --font-geist-sans: 'Geist Sans', sans-serif;
   
   /* Blue theme shades */
